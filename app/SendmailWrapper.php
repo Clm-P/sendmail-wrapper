@@ -43,6 +43,8 @@ class SendmailWrapper extends StdinMailParser
         $xHeaderPrefix = $this->_conf->wrapper->xHeaderPrefix;
         $defaultHost   = $this->_conf->wrapper->defaultHost;
 
+        $reporteAbuseTo = $this->_conf->wrapper->reporteAbuseTo;
+
         // generate an RFC-compliant Message-ID
         // RFC 2822 (http://www.faqs.org/rfcs/rfc2822.html)
         $msgId = sprintf(
@@ -55,6 +57,12 @@ class SendmailWrapper extends StdinMailParser
         // set additional header
         $this->setHeader($xHeaderPrefix . 'MsgID', sprintf('<%s>', $msgId));
 
+        if($reporteAbuseTo)
+        {
+            // for abuses
+            $this->setHeader('X-Report-Abuse-To', $reporteAbuseTo);
+        }
+        
         // parse original headers
         $headerArr = $this->getParsedHeaderArr();
 
